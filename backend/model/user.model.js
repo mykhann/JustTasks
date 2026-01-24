@@ -18,7 +18,10 @@ const userSchema= new schema ({
         type:mongoose.Schema.Types.ObjectId,
         ref:"Task"
     },
-   
+    assignedTo:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User"
+    }
 
 
 },{timestamps:true})
