@@ -2,6 +2,7 @@ import "dotenv/config"
 import express from "express"
 import connectToDatabase from "./db/index.js"
 import userRoutes from "./route/user.route.js"
+import cors from "cors"
 const app = express()
 
 const PORT= process.env.PORT
@@ -10,9 +11,15 @@ app.use(express.json());
 
 // database connection 
 connectToDatabase()
+app.use(cors({
+    origin:"http://localhost:5173",
+    credentials:true
+}))
+
 
 // routers 
 app.use("/api/v1/",userRoutes)
+
 
 
 
