@@ -82,9 +82,10 @@ export const LoginUser = AsyncHandler(async(req,res)=>{
 
         const cookieOptions = {
             httpOnly: true,
-            sameSite: "strict"
+            sameSite: "strict",
+             maxAge: 1000 * 60 * 60,
         }
-        res.cookie("token", cookieOptions)
+        res.cookie("token",token, cookieOptions)
 
 
         res.status(200).json({
