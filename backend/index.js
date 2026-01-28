@@ -3,11 +3,13 @@ import express from "express"
 import connectToDatabase from "./db/index.js"
 import userRoutes from "./route/user.route.js"
 import cors from "cors"
+import cookieParser from "cookie-parser"
 const app = express()
 
 const PORT= process.env.PORT
 
 app.use(express.json());
+app.use(cookieParser());
 
 // database connection 
 connectToDatabase()

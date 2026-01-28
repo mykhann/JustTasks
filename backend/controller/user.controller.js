@@ -25,6 +25,8 @@ export const registerAccount = async (req, res) => {
         }
         const hashedPassword = await bcrypt.hash(password, 10)
 
+        await redisClient.del("users")
+
         const user = await User.create({
             name: name,
             username: username,
@@ -86,9 +88,16 @@ export const LoginUser = async (req, res) => {
             { expiresIn: jwtExpiry }
         )
 
+        const cookieOptions={
+            httpOnly:true,
+            sameSite:"strict"
+        }
+        res.cookie("token",cookieOptions)
+
+
         res.status(200).json({
             message: `Welcome Back ${user.name}`,
-            user, token,
+            user,
             success: true
         })
 
@@ -106,25 +115,25 @@ export const getUsers = async (req, res) => {
         if (cachedUsers) {
             return res.json(JSON.parse(cachedUsers))
         }
-        const users = await User.find().select("name,email").lean()
-        if(users.length===0){
+        const users = await User.find().select("name email").lean()
+        if (users.length === 0) {
             return res.status(404).json({
-                messgae:"No users found",
-                success:false
+                messgae: "No users found",
+                success: false
             })
         }
-        redisClient.setEx("users",3600, JSON.stringify(users))
-        console.log("users",users)
+        redisClient.setEx("users", 3600, JSON.stringify(users))
+        console.log("users", users)
 
         res.status(200).json({
-            message:"Users fetched",
-            success:true,
+            message: "Users fetched",
+            success: true,
             users
         })
-    
-} catch (error) {
 
-    console.log(error)
+    } catch (error) {
+
+        console.log(error)
 
     }
 }
