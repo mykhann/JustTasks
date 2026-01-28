@@ -2,6 +2,7 @@ import "dotenv/config"
 import express from "express"
 import connectToDatabase from "./db/index.js"
 import userRoutes from "./route/user.route.js"
+import taskRoutes from  "./route/task.route.js"
 import cors from "cors"
 import cookieParser from "cookie-parser"
 const app = express()
@@ -21,8 +22,7 @@ app.use(cors({
 
 // routers 
 app.use("/api/v1/",userRoutes)
-
-
+app.use("/api/v1/tasks",taskRoutes)
 
 
 app.listen(PORT,()=>{

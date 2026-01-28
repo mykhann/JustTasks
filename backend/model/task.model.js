@@ -12,6 +12,10 @@ const taskSchema = new schema({
         type: String,
         trim:true
     },
+       assignedTo:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User"
+    },
     postedBy: {
         type: mongoose.Types.ObjectId,
         ref: "User"

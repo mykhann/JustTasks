@@ -6,7 +6,7 @@
         const tokenSecret=process.env.ACCESS_TOKEN_SECRET
 
         const token= req.cookies?.token
-        console.log(token)
+    
         if (!token){
             return res.status(404).json({
                 message:"Token not present",
