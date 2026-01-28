@@ -1,5 +1,6 @@
 import AsyncHandler from "../middleware/AsyncHandler.js"
 import Task from "../model/task.model.js"
+
 export const postTask = AsyncHandler(async (req, res) => {
     const { title, description, priority } = req.body;
     const {userId}=req.params
@@ -27,4 +28,23 @@ export const postTask = AsyncHandler(async (req, res) => {
     })
 
 
+})
+
+export const getLoggedInUserTasks=AsyncHandler(async(req,res)=>{
+    const loggedInUserId=req.user._id;
+    const loggedInUserTasks=await Task.find({assignedTo:loggedInUserId}).populate("postedBy" ,"name")
+    if (loggedInUserTasks.length === 0){
+        return res.status(404).json({
+            success:false,
+            message:"No Task found"
+        })
+    }
+    res.status(200).json({
+        success:true,
+        message:"All tasks found",
+        loggedInUserTasks
+
+    })
+   
+    
 })
