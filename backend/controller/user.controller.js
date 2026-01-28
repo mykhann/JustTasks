@@ -3,65 +3,57 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt"
 import User from "../model/user.model.js"
 import { redisClient } from "../cache.js";
+import AsyncHandler from "../middleware/AsyncHandler.js";
 
 const jwtExpiry = process.env.ACCESS_TOKEN_EXPIRY
 const jwtSecret = process.env.ACCESS_TOKEN_SECRET
-export const registerAccount = async (req, res) => {
-    try {
-        const { name, username, password } = req.body
-        if (!name || !username || !password) {
-            return res.status(400).json({
-                message: "Please enter all the fields",
-                success: false
-            })
-        }
-        const userExists = await User.findOne({ username })
-        console.log(userExists)
-        if (userExists) {
-            return res.status(400).json({
-                message: "User already exists ",
-                success: false
-            })
-        }
-        const hashedPassword = await bcrypt.hash(password, 10)
-
-        await redisClient.del("users")
-
-        const user = await User.create({
-            name: name,
-            username: username,
-            password: hashedPassword
-
-        })
 
 
-        const token = jwt.sign(
-            { id: user._id, username: user.username },
-            jwtSecret,
-            { expiresIn: jwtExpiry }
-        )
-
-        res.status(200).json({
-            message: "User created successfully",
-            user, token,
-            success: true
-        })
-
-
-    } catch (error) {
-        res.status(500).json({
-            message: error.message,
+export const registerAccount = AsyncHandler(async (req,res) => {
+    const { name, username, password } = req.body
+    if (!name || !username || !password) {
+        return res.status(400).json({
+            message: "Please enter all the fields",
             success: false
         })
-
     }
+    const userExists = await User.findOne({ username })
+    console.log(userExists)
+    if (userExists) {
+        return res.status(400).json({
+            message: "User already exists ",
+            success: false
+        })
+    }
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    await redisClient.del("users")
+
+    const user = await User.create({
+        name: name,
+        username: username,
+        password: hashedPassword
+
+    })
 
 
-}
+    const token = jwt.sign(
+        { id: user._id, username: user.username },
+        jwtSecret,
+        { expiresIn: jwtExpiry }
+    )
 
-export const LoginUser = async (req, res) => {
-    try {
-        const { username, password } = req.body;
+    res.status(200).json({
+        message: "User created successfully",
+        user, token,
+        success: true
+    })
+
+})
+
+
+export const LoginUser = AsyncHandler(async(req,res)=>{
+          const { username, password } = req.body;
         if (!username || !password) {
             res.status(400).json({
                 message: "Please enter the required credentials",
@@ -88,11 +80,11 @@ export const LoginUser = async (req, res) => {
             { expiresIn: jwtExpiry }
         )
 
-        const cookieOptions={
-            httpOnly:true,
-            sameSite:"strict"
+        const cookieOptions = {
+            httpOnly: true,
+            sameSite: "strict"
         }
-        res.cookie("token",cookieOptions)
+        res.cookie("token", cookieOptions)
 
 
         res.status(200).json({
@@ -101,17 +93,10 @@ export const LoginUser = async (req, res) => {
             success: true
         })
 
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
-    }
-}
+})
 
-
-export const getUsers = async (req, res) => {
-    try {
-        const cachedUsers = await redisClient.get("users")
+export const getUsers=AsyncHandler(async(req,res)=>{
+     const cachedUsers = await redisClient.get("users")
         if (cachedUsers) {
             return res.json(JSON.parse(cachedUsers))
         }
@@ -130,10 +115,4 @@ export const getUsers = async (req, res) => {
             success: true,
             users
         })
-
-    } catch (error) {
-
-        console.log(error)
-
-    }
-}
+}) 
