@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./Navbar.css";
+import UserContext from "../../context/UserContext";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const {user}=useContext(UserContext)
   return (
     <header className="navbar-header">
       <div className="logo">Just Tasks</div>
@@ -34,7 +35,7 @@ const Navbar = () => {
           className="nav-link"
           onClick={() => setIsOpen(false)}
         >
-          Login
+         {user?"":"login"}
         </NavLink>
       </nav>
     </header>

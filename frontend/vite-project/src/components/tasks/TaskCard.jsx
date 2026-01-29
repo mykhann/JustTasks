@@ -1,7 +1,7 @@
 import React from "react";
 
 // TaskCard component
-const TaskCard = ({ title, description, priority }) => {
+const TaskCard = ({ title, description, priority,completed }) => {
   // Determine color based on priority
   const priorityColors = {
     High: "#e74c3c",    // Red
@@ -16,6 +16,10 @@ const TaskCard = ({ title, description, priority }) => {
       <span style={{ ...styles.priority, backgroundColor: priorityColors[priority] || "#333" }}>
         {priority}
       </span>
+      <span style={{ ...styles.priority, backgroundColor: priorityColors[priority] || "#721d1d" }}>
+        {completed?"Completed":"Pending"}
+      </span>
+      
     </div>
   );
 };
