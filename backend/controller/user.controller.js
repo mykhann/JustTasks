@@ -33,7 +33,8 @@ export const registerAccount = AsyncHandler(async (req, res) => {
     const user = await User.create({
         name: name,
         username: username,
-        password: hashedPassword
+        password: hashedPassword,
+        role:"user"
 
     })
 
@@ -56,7 +57,7 @@ export const registerAccount = AsyncHandler(async (req, res) => {
 export const LoginUser = AsyncHandler(async (req, res) => {
     const { username, password } = req.body;
     if (!username || !password) {
-        res.status(400).json({
+       return res.status(400).json({
             message: "Please enter the required credentials",
             success: false
         })
@@ -64,7 +65,7 @@ export const LoginUser = AsyncHandler(async (req, res) => {
     const user = await User.findOne({ username });
     if (!user) {
         return res.status(400).json({
-            returnmessage: "User not found",
+            message: "User not found",
             success: false
         })
     }
