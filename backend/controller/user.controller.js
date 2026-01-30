@@ -121,8 +121,10 @@ export const getUsers = AsyncHandler(async (req, res) => {
 })
 
 
-// export const getUserTasks = AsyncHandler(async (req, res) => {
-//     const logged_In_User_Id = req.user._id
-//     const tasks = await Task.find()
-//     if (tasks._id)
-// })
+export const logout = AsyncHandler(async (req, res) => {
+    res.clearCookie("token")
+    res.status(200).json({
+        success:true,
+        message:"Logged out"
+    })
+})
