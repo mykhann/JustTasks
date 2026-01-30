@@ -13,7 +13,7 @@ export const UserContextProvider = ({ children }) => {
 
     try {
       setLoading(true);
-      const res = await axios.post(`${Base_Url}/login`,input );
+      const res = await axios.post(`${Base_Url}/login`,input ,{withCredentials:true})
       setUser(res.data)
       setError(null)
       return true;
@@ -40,9 +40,24 @@ export const UserContextProvider = ({ children }) => {
         setLoading(false)
     }
   }
+  
+  const logout=async()=>{
+    try {
+        const res=await axios.post(`${Base_Url}/logout`)
+        setUser(null)
+        return true
+        
+        
+    } catch (error) {
+        console.log(error.response.data.message)
+        
+    }
+  }
 
   return(
-    <UserContext.Provider value={{user,setUser,error,loading,login,signup}}>{children}</UserContext.Provider>
+    <UserContext.Provider value={{user,setUser,error,loading,login,signup,logout
+
+    }}>{children}</UserContext.Provider>
   )
 };
 

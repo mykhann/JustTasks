@@ -7,7 +7,7 @@ router.post("/register",registerAccount)
 router.post("/login",LoginUser)
 // router.post("/users",getUsers)
 router.get("/users",isAuthenticated,getUsers)
-router.get("/logout",isAuthenticated,logout)
+router.post("/logout",logout)
 
 
 

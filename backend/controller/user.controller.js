@@ -122,7 +122,10 @@ export const getUsers = AsyncHandler(async (req, res) => {
 
 
 export const logout = AsyncHandler(async (req, res) => {
-    res.clearCookie("token")
+    res.clearCookie("token",{
+        sameSite:"strict",
+        httpOnly:true
+    })
     res.status(200).json({
         success:true,
         message:"Logged out"

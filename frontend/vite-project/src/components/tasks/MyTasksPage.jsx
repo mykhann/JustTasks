@@ -3,13 +3,19 @@ import React, { useContext, useEffect, useState } from "react";
 import Base_Url from "../../apiUrl";
 import TaskCard from "./TaskCard";
 import TasksContext from "../../context/TasksContext";
+import UserContext from "../../context/UserContext";
 
 const MyTasksPage = () => {
   const { tasks, setTasks,fetchTasks,loading ,updateStatus} = useContext(TasksContext);
   const [ error, setError ] = useState(null);
+  const {user}=useContext(UserContext)
 
   useEffect(() => {
-    fetchTasks()
+   if (user){
+     fetchTasks()
+   }else{
+    setTasks([])
+   }
   },[]);
 
 
