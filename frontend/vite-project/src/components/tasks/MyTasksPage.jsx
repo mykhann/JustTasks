@@ -23,9 +23,26 @@ const MyTasksPage = () => {
     };
      fetchedTasks();
   },[]);
+
+ const updateStatus=async(taskId,completed)=>{
+  try {
+      setTasks(prev =>
+    prev.map(task =>
+      task._id === taskId ? { ...task, completed: !completed } : task
+    )
+  );
+    const res= await axios.patch(`${Base_Url}/tasks/update/${taskId}`,{completed:!completed},{withCredentials:true})
+  
+    
+  } catch (error) {
+    console.log(error.response.data.message)
+    
+  }
+ }
+
   return <>{
     tasks.map((item)=>{
-      return <TaskCard index={item._id} title={item.title} completed={item.completed} description={item.description} priority={item.priority}/>
+      return <TaskCard index={item._id} onStatusToggle={()=>updateStatus(item._id,item.completed)}  title={item.title} completed={item.completed} description={item.description} priority={item.priority}/>
     })
   }</>;
 };
