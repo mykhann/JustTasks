@@ -4,36 +4,24 @@ import Base_Url from "../../apiUrl";
 import UserContext from "../../context/UserContext";
 import axios from "axios";
 const Signup = () => {
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [input, setInput] = useState({
     username: "",
     name: "",
     password: "",
   });
-
-  const { setUser } = useContext(UserContext);
-  const navigate = useNavigate()
+  const { signup, loading, error } = useContext(UserContext);
+  const navigate = useNavigate();
   const onSubmitHandler = async (e) => {
-    e.preventDefault();
     try {
-      setLoading(true)
-      const res = await axios.post(`${Base_Url}/register`, input);
-      setSuccess(res.data.message);
-      setError(null)
-      navigate("/login")
-
+      e.preventDefault();
+      const success = signup(input);
+      if (success) navigate("/login");
     } catch (error) {
-      setError(error?.response?.data?.message);
-      setSuccess(false)
-    } finally{
-      setLoading(false)
+      console.log(error);
     }
   };
 
   const onChangeHandler = (e) => {
-    setError(null);
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 
@@ -43,7 +31,6 @@ const Signup = () => {
 
       <div style={{ display: "flex", justifyContent: "center" }}>
         <span style={{ color: "red" }}>{error}</span>
-        <span style={{ color: "green" }}>{success}</span>
       </div>
       <div
         style={{

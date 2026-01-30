@@ -5,10 +5,11 @@ import './App.css'
 import Navbar from './components/layout/Navbar'
 import { BrowserRouter, Routes ,Route} from 'react-router-dom'
 import { Login } from './components/auth/Login'
-import UserContext from './context/UserContext'
+import UserContext, { UserContextProvider } from './context/UserContext'
 import Signup from './components/auth/Signup'
 import TasksContext, { TasksProvider } from './context/TasksContext'
 import MyTasksPage from './components/tasks/MyTasksPage'
+
 
 function App() {
   const [user, setUser] = useState(null)
@@ -17,8 +18,8 @@ function App() {
 
   return (
    <>
+   <UserContextProvider>
    <TasksProvider>
-   <UserContext.Provider value={{user,setUser}}>
    <BrowserRouter>
     <Navbar/>
     <Routes>
@@ -27,8 +28,8 @@ function App() {
       <Route path='/'element={<MyTasksPage/>}/>
     </Routes>
    </BrowserRouter>
-   </UserContext.Provider>
    </TasksProvider>
+   </UserContextProvider>
    
      </>
   )
