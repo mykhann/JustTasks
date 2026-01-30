@@ -7,17 +7,17 @@ import { BrowserRouter, Routes ,Route} from 'react-router-dom'
 import { Login } from './components/auth/Login'
 import UserContext from './context/UserContext'
 import Signup from './components/auth/Signup'
-import TasksContext from './context/TasksContext'
+import TasksContext, { TasksProvider } from './context/TasksContext'
 import MyTasksPage from './components/tasks/MyTasksPage'
 
 function App() {
   const [user, setUser] = useState(null)
-  const [tasks, setTasks] = useState([])
+
   
 
   return (
    <>
-   <TasksContext.Provider value={{tasks,setTasks}}>
+   <TasksProvider>
    <UserContext.Provider value={{user,setUser}}>
    <BrowserRouter>
     <Navbar/>
@@ -28,7 +28,7 @@ function App() {
     </Routes>
    </BrowserRouter>
    </UserContext.Provider>
-   </TasksContext.Provider>
+   </TasksProvider>
    
      </>
   )
